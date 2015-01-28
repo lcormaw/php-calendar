@@ -17,6 +17,53 @@
 	// Verify which weekday is the last day of the month
 	$lastDay = date('w', mktime(0, 0, 0, $month, $howManyDays, $year));
 	
+	// Initialize counter
+	$cnt = 1;
+		
+	function firstWeek() {
+		// Change scope of variables to global
+		global $cnt, $firstDay;
+			
+		// Create list items for days from previous month
+		if ($cnt == 1 && $firstDay != 0) {
+			for ($i = 0; $i < $firstDay; $i++) {
+				echo 	"<li class=\"day other-month\">\n
+							<div class=\"date\">-</div>\n
+						</li>";
+			}
+		}
+		
+		// Create remaining list items for first week
+		for ($i = $firstDay; $i < 7; $i++) {
+			echo	"<li class=\"day\">\n
+						<div class=\"date\">$cnt</div>
+					</li>";
+			$cnt++;
+		}
+	}
+	
+	function otherWeeks() {
+		global $cnt, $howManyDays, $lastDay;
+		
+		while ($cnt <= $howManyDays) {
+			echo "<ul class=\"days\">\n";
+			for ($i = 0; $i <7; $i++) {
+				echo	"<li class=\"day\">\n
+							<div class=\"date\">$cnt</div>
+						</li>";
+				$cnt++;
+				if ($cnt == $howManyDays+1 && $lastDay != 6) {
+					for ($i = 0; $i < (6 - $lastDay); $i++) {
+						echo 	"<li class=\"day other-month\">\n
+									<div class=\"date\">-</div>\n
+								</li>";
+					}
+					exit();
+				}
+			}
+			echo "</ul>";
+		}
+	}
 ?>
 
 <!doctype html>
@@ -45,49 +92,10 @@
 				</ul>
 				
 				<ul class="days">
-					<?php
-						// Initialize counter
-						$cnt = 1;
-						
-						// Create all <li class="day other-month">
-						if ($cnt == 1 && $firstDay != 0) {
-							for ($i = 0; $i < $firstDay; $i++) {
-								echo 	"<li class=\"day other-month\">\n
-											<div class=\"date\">-</div>\n
-										</li>";
-							}
-						}
-						
-						// Create remaining list items for first week
-						for ($i = $firstDay; $i < 7; $i++) {
-							echo	"<li class=\"day\">\n
-										<div class=\"date\">$cnt</div>
-									</li>";
-							$cnt++;
-						}
-					?>
+					<?php echo firstWeek(); ?>
 				</ul>
 				
-				<?php
-					while ($cnt <= $howManyDays) {
-						echo "<ul class=\"days\">\n";
-						for ($i = 0; $i <7; $i++) {
-							echo	"<li class=\"day\">\n
-										<div class=\"date\">$cnt</div>
-									</li>";
-							$cnt++;
-							if ($cnt == $howManyDays+1 && $lastDay != 6) {
-								for ($i = 0; $i < (6 - $lastDay); $i++) {
-									echo 	"<li class=\"day other-month\">\n
-												<div class=\"date\">-</div>\n
-											</li>";
-								}
-								exit();
-							}
-						}
-						echo "</ul>";
-					}
-				?>
+				<?php echo otherWeeks(); ?>
 				
 			</div><!-- end calendar -->
 		</div><!-- end calendar-wrap -->
