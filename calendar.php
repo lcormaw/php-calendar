@@ -22,6 +22,8 @@
 		$lastDay = date('j', mktime(0, 0, 0, $month+1, 0, $year));
 	}
 	
+	$lastMonthDay = date('w', mktime(0, 0, 0, $month, $lastDay, $year));
+	
 ?>
 
 <!doctype html>
@@ -53,11 +55,14 @@
 				<ul class="days">
 					<?php
 						// Create all <li class="day other-month">
-						for ($i = 0; $i < $firstDay; $i++) {
-							echo 	"<li class=\"day other-month\">\n
-										<div class=\"date\">-</div>\n
-									</li>";
+						if ($firstDay != 0) {
+							for ($i = 0; $i < $firstDay; $i++) {
+								echo 	"<li class=\"day other-month\">\n
+											<div class=\"date\">-</div>\n
+										</li>";
+							}	
 						}
+						
 					?>
 					
 					<?php
@@ -74,7 +79,7 @@
 				</ul>
 				
 				<?php
-				
+					
 					while ($cnt <= $lastDay) {
 						echo "<ul class=\"days\">\n";
 						for ($i = 0; $i <7; $i++) {
@@ -82,26 +87,19 @@
 										<div class=\"date\">$cnt</div>
 									</li>";
 							$cnt++;
+							if ($cnt == $lastDay+1 && $lastMonthDay != 6) {
+								for ($i = 6 - $lastMonthDay; $i < 7; $i++) {
+									echo 	"<li class=\"day other-month\">\n
+												<div class=\"date\">Empty</div>\n
+											</li>";
+								}
+							}
 						}
 						echo "</ul>";
 					}
 				
 				?>
 				
-				<?php
-				
-					// Create <li class="day other-month" for last week
-					$lastMonthDay = date('w', mktime(0, 0, 0, $month, $lastDay, $year));
-										
-					if ($lastMonthDay != 6) {
-						for ($i = 0; $i < $lastMonthDay; $i++) {
-							echo 	"<li class=\"day other-month\">\n
-										<div class=\"date\">Empty</div>\n
-									</li>";
-						}
-					}
-				
-				?>
 				
 				
 				
