@@ -20,16 +20,17 @@
 	// Initialize counter
 	$cnt = 1;
 		
-	function firstWeek() {
+	function createWeeks() {
 		// Change scope of variables to global
-		global $cnt, $firstDay;
+		global $cnt, $firstDay, $howManyDays, $lastDay;
 			
 		// Create list items for days from previous month
+		echo "<ul class=\"days\">\n";
 		if ($cnt == 1 && $firstDay != 0) {
 			for ($i = 0; $i < $firstDay; $i++) {
 				echo 	"<li class=\"day other-month\">\n
 							<div class=\"date\">-</div>\n
-						</li>";
+						</li>\n";
 			}
 		}
 		
@@ -37,26 +38,26 @@
 		for ($i = $firstDay; $i < 7; $i++) {
 			echo	"<li class=\"day\">\n
 						<div class=\"date\">$cnt</div>
-					</li>";
+					</li>\n";
 			$cnt++;
 		}
-	}
+		echo "</ul>";
 	
-	function otherWeeks() {
-		global $cnt, $howManyDays, $lastDay;
-		
+		// Create remaining weeks
 		while ($cnt <= $howManyDays) {
 			echo "<ul class=\"days\">\n";
 			for ($i = 0; $i <7; $i++) {
 				echo	"<li class=\"day\">\n
 							<div class=\"date\">$cnt</div>
-						</li>";
+						</li>\n";
 				$cnt++;
+				
+				// Create list items for days from next month
 				if ($cnt == $howManyDays+1 && $lastDay != 6) {
 					for ($i = 0; $i < (6 - $lastDay); $i++) {
 						echo 	"<li class=\"day other-month\">\n
 									<div class=\"date\">-</div>\n
-								</li>";
+								</li>\n";
 					}
 					exit();
 				}
@@ -91,11 +92,7 @@
 					<li>Saturday</li>
 				</ul>
 				
-				<ul class="days">
-					<?php echo firstWeek(); ?>
-				</ul>
-				
-				<?php echo otherWeeks(); ?>
+				<?php echo createWeeks(); ?>
 				
 			</div><!-- end calendar -->
 		</div><!-- end calendar-wrap -->
