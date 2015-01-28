@@ -9,6 +9,7 @@
 	// Check if $year is a leap year
 	$leap = date('L'); #returns 1 if leap
 	
-	
+	// Verify which weekday is the first day of the month
+	$firstDay = date('w', mktime(0, 0, 0, $month, 1, $year)); # 0 (for Sunday) to 6 (for Saturday)
 
 ?>
