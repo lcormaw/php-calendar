@@ -33,7 +33,7 @@
 	// Create calendar
 	/***************************************/
 	function createCalendar() {
-		global $firstDay, $howManyDays, $lastDay;
+		global $month, $year, $firstDay, $howManyDays, $lastDay;
 		$cnt = 1;
 		
 		// Connect to events database
@@ -47,8 +47,40 @@
 			exit();
 		}
 		
-		// Create array of dates on which there is an event
-			
+		// Fetch events
+		try {
+			$sql = 	"SELECT id, title, dayStart, dayEnd FROM eventdate
+					WHERE month = $month AND year = $year";
+			$result = $pdo->query($sql);
+		} catch (PDOException $e) {
+			$error = "Error fetching events: " . $e->getMessage();
+			echo $error;
+			exit();
+		}
+
+		foreach ($result as $row) {
+			$events[] = array(
+							"id" => $row["id"],
+							"title" => $row["title"],
+							"dayStart" => $row["dayStart"],
+							"dayEnd" => $row["dayEnd"]
+						);
+		}
+		
+		foreach ($events as $event) {
+			$id = $event['id'];
+			${'display' . $id} = "<div class=\"event\">\n";
+			${'display' . $id} .= "<div class=\"event-desc\">\n";
+			${'display' . $id} .= $event['title'] . "\n";
+			${'display' . $id} .= "</div>\n";
+			${'display' . $id} .= "</div>\n";
+		}
+		
+		echo $display1 . "<br>";
+		echo $display2;
+				
+		
+		
 			
 		// Create list items for days from previous month
 		echo "<ul class=\"days\">\n";
