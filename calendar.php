@@ -3,9 +3,9 @@
 	/***************************************/
 	// Set month and year
 	/***************************************/
-	$month = date('n'); #  1 to 12
-	$year = date('Y'); # eg. 2015
-	$monthName = date('F'); # January through December
+	$month = date('n'); 
+	$year = date('Y'); 
+	$monthName = date('F');
 	
 	if (isset($_GET['months'])) {
 		$month = $_GET['months'];
@@ -17,37 +17,37 @@
 	}
 	
 	/***************************************/
+	// Verify on which weekday to start and end the calendar and how long the month is
+	/***************************************/
+	$firstDay = date('w', mktime(0, 0, 0, $month, 1, $year));
+	
+	if ($month == 12) {
+		$howManyDays = date('j', mktime(0, 0, 0, 1, 0, $year+1));
+	} else {
+		$howManyDays = date('j', mktime(0, 0, 0, $month+1, 0, $year));
+	}
+	
+	$lastDay = date('w', mktime(0, 0, 0, $month, $howManyDays, $year));
+	
+	/***************************************/
 	// Create calendar
 	/***************************************/
 	function createCalendar() {
-		global $month, $year;
-		
-		// Verify which weekday is the first day of the month
-		$firstDay = date('w', mktime(0, 0, 0, $month, 1, $year)); # 0 (for Sunday) to 6 (for Saturday)
-		
-		// Verify how many days there are in the month
-		if ($month == 12) {
-			$howManyDays = date('j', mktime(0, 0, 0, 1, 0, $year+1));
-		} else {
-			$howManyDays = date('j', mktime(0, 0, 0, $month+1, 0, $year));
-		}
-		
-		// Verify which weekday is the last day of the month
-		$lastDay = date('w', mktime(0, 0, 0, $month, $howManyDays, $year));
-		
-		// Initialize counter
+		global $firstDay, $howManyDays, $lastDay;
 		$cnt = 1;
 		
 		// Connect to events database
 		
+		
 		// Create array of dates on which there is an event
+			
 			
 		// Create list items for days from previous month
 		echo "<ul class=\"days\">\n";
 		if ($cnt == 1 && $firstDay != 0) {
 			for ($i = 0; $i < $firstDay; $i++) {
 				echo 	"<li class=\"day other-month\">\n
-							<div class=\"date\">-</div>\n
+							<div class=\"date\">&nbsp;</div>\n
 						</li>\n";
 			}
 		}
@@ -76,7 +76,7 @@
 				if ($cnt == $howManyDays+1 && $lastDay != 6) {
 					for ($i = 0; $i < (6 - $lastDay); $i++) {
 						echo 	"<li class=\"day other-month\">\n
-									<div class=\"date\">-</div>\n
+									<div class=\"date\">&nbsp;</div>\n
 								</li>\n";
 					}
 					exit();
@@ -86,11 +86,26 @@
 		}
 	}
 	
-	
+	/***************************************/
+	// Create pull-down menus
+	/***************************************/
+	function changeCalendar() {
+		$months = array(1 => 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 		
-	
-
-	
+		$years = range(date('Y'), date('Y')+5);
+		
+		echo '<select name="months">';
+		foreach ($months as $monthNum => $monthName) {
+			echo "<option value=\"$monthNum\">$monthName</option>\n";
+		}
+		echo '</select>';
+		
+		echo '<select name="years">';
+		foreach ($years as $year) {
+			echo "<option value=\"$year\">$year</option>\n";
+		}
+		echo '</select>';
+	}
 ?>
 
 <!doctype html>
@@ -106,27 +121,7 @@
 			<header>
 				<h1><?php echo $monthName . ' ' . $year; ?></h1>
 				<form action="" method="get">
-					<?php
-						// Make the months array
-						$months = array(1 => 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
-						
-						// Make the years array
-						$years = range(date('Y'), date('Y')+5);
-						
-						// Make the months pull-down menu
-						echo '<select name="months">';
-						foreach ($months as $monthNum => $monthName) {
-							echo "<option value=\"$monthNum\">$monthName</option>\n";
-						}
-						echo '</select>';
-						
-						// Make the years pull-down menu
-						echo '<select name="years">';
-						foreach ($years as $year) {
-							echo "<option value=\"$year\">$year</option>\n";
-						}
-						echo '</select>';
-					?>
+					<?php echo changeCalendar(); ?>
 					<input type="submit" value="Go">
 					
 					
