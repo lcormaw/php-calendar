@@ -36,6 +36,16 @@
 		global $month, $year, $firstDay, $howManyDays, $lastDay;
 		$cnt = 1;
 		
+		// Create list items for days from previous month
+		echo "<ul class=\"days\">\n";
+		if ($cnt == 1 && $firstDay != 0) {
+			for ($i = 0; $i < $firstDay; $i++) {
+				echo 	"<li class=\"day other-month\">\n
+							<div class=\"date\">&nbsp;</div>\n
+						</li>\n";
+			}
+		}
+		
 		// Connect to events database
 		try {
 			$pdo = new PDO('mysql:host=localhost;dbname=events', 'eventadmin', 'mypassword');
@@ -59,46 +69,45 @@
 		}
 
 		foreach ($result as $row) {
-			$events[] = array(
-							"id" => $row["id"],
-							"title" => $row["title"],
-							"dayStart" => $row["dayStart"],
-							"dayEnd" => $row["dayEnd"]
-						);
+		$events[] = array(
+						"id" => $row["id"],
+						"title" => $row["title"],
+						"dayStart" => $row["dayStart"],
+						"dayEnd" => $row["dayEnd"]
+					);
+		
 		}
 		
-		foreach ($events as $event) {
-			$id = $event['id'];
-			${'display' . $id} = "<div class=\"event\">\n";
-			${'display' . $id} .= "<div class=\"event-desc\">\n";
-			${'display' . $id} .= $event['title'] . "\n";
-			${'display' . $id} .= "</div>\n";
-			${'display' . $id} .= "</div>\n";
-		}
-		
-		echo $display1 . "<br>";
-		echo $display2;
-				
-		
-		
-			
-		// Create list items for days from previous month
-		echo "<ul class=\"days\">\n";
-		if ($cnt == 1 && $firstDay != 0) {
-			for ($i = 0; $i < $firstDay; $i++) {
-				echo 	"<li class=\"day other-month\">\n
-							<div class=\"date\">&nbsp;</div>\n
-						</li>\n";
+		if (isset($events)) {
+			// Create div for each event
+			foreach ($events as $event) {
+				$id = $event['id'];
+				${'display' . $id} = "<div class=\"event\">\n";
+				${'display' . $id} .= "<div class=\"event-desc\">\n";
+				${'display' . $id} .= $event['title'] . "\n";
+				${'display' . $id} .= "</div>\n";
+				${'display' . $id} .= "</div>\n";
 			}
 		}
+			
+		
+		
 		
 		// Create remaining list items for first week
 		for ($i = $firstDay; $i < 7; $i++) {
 			echo	"<li class=\"day\">\n
-						<div class=\"date\">$cnt</div>
-					</li>\n";
-			// If $cnt is equal to day (from database) on which there is an event:
-				// Echo <div class="event"><a href="">"Event title</a></div>
+					<div class=\"date\">$cnt</div>";
+			
+			if (isset($events)) {
+				foreach ($events as $event) {
+						if ($event['dayStart'] == $cnt) {
+							echo ${'display' . $event['id']};
+						}
+				}	
+			}
+						
+					
+			echo 	"</li>\n";
 			$cnt++;
 		}
 		echo "</ul>";
@@ -107,9 +116,18 @@
 		while ($cnt <= $howManyDays) {
 			echo "<ul class=\"days\">\n";
 			for ($i = 0; $i <7; $i++) {
-				echo	"<li class=\"day\">\n
-							<div class=\"date\">$cnt</div>
-						</li>\n";
+				echo 	"<li class=\"day\">\n
+						<div class=\"date\">$cnt</div>";
+					
+				if (isset($events)) {
+				foreach ($events as $event) {
+						if ($event['dayStart'] == $cnt) {
+							echo ${'display' . $event['id']};
+						}
+				}	
+			}
+					
+				echo 	"</li>\n";
 				$cnt++;
 				
 				// Create list items for days from next month
