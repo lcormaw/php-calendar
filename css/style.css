@@ -80,6 +80,10 @@ form {
 	float: right;
 }
 
+#calendar .other-month .date  {
+	display: none;
+}
+
 #calendar .event {
 	clear: both;
 	display: block;
