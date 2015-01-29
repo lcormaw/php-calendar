@@ -1,6 +1,8 @@
 <?php
 
-	// Get the current month and year
+	/***************************************/
+	// Set month and year
+	/***************************************/
 	$month = date('n'); #  1 to 12
 	$year = date('Y'); # eg. 2015
 	$monthName = date('F'); # January through December
@@ -9,26 +11,36 @@
 		$month = $_GET['months'];
 		$monthName = date("F", mktime(0, 0, 0, $month, 10));
 	}
-
-	// Verify which weekday is the first day of the month
-	$firstDay = date('w', mktime(0, 0, 0, $month, 1, $year)); # 0 (for Sunday) to 6 (for Saturday)
 	
-	// Verify how many days there are in the month
-	if ($month == 12) {
-		$howManyDays = date('j', mktime(0, 0, 0, 1, 0, $year+1));
-	} else {
-		$howManyDays = date('j', mktime(0, 0, 0, $month+1, 0, $year));
+	if (isset($_GET['years'])) {
+		$year = $_GET['years'];
 	}
 	
-	// Verify which weekday is the last day of the month
-	$lastDay = date('w', mktime(0, 0, 0, $month, $howManyDays, $year));
-	
-	// Initialize counter
-	$cnt = 1;
+	/***************************************/
+	// Create calendar
+	/***************************************/
+	function createCalendar() {
+		global $month, $year;
 		
-	function createWeeks() {
-		// Change scope of variables to global
-		global $cnt, $firstDay, $howManyDays, $lastDay;
+		// Verify which weekday is the first day of the month
+		$firstDay = date('w', mktime(0, 0, 0, $month, 1, $year)); # 0 (for Sunday) to 6 (for Saturday)
+		
+		// Verify how many days there are in the month
+		if ($month == 12) {
+			$howManyDays = date('j', mktime(0, 0, 0, 1, 0, $year+1));
+		} else {
+			$howManyDays = date('j', mktime(0, 0, 0, $month+1, 0, $year));
+		}
+		
+		// Verify which weekday is the last day of the month
+		$lastDay = date('w', mktime(0, 0, 0, $month, $howManyDays, $year));
+		
+		// Initialize counter
+		$cnt = 1;
+		
+		// Connect to events database
+		
+		// Create array of dates on which there is an event
 			
 		// Create list items for days from previous month
 		echo "<ul class=\"days\">\n";
@@ -45,6 +57,8 @@
 			echo	"<li class=\"day\">\n
 						<div class=\"date\">$cnt</div>
 					</li>\n";
+			// If $cnt is equal to day (from database) on which there is an event:
+				// Echo <div class="event"><a href="">"Event title</a></div>
 			$cnt++;
 		}
 		echo "</ul>";
@@ -71,9 +85,11 @@
 			echo "</ul>";
 		}
 	}
-
+	
 	
 		
+	
+
 	
 ?>
 
@@ -90,21 +106,30 @@
 			<header>
 				<h1><?php echo $monthName . ' ' . $year; ?></h1>
 				<form action="" method="get">
-					<select name="months">
-						<option value="1">January</option>
-						<option value="2">February</option>
-						<option value="3">March</option>
-						<option value="4">April</option>
-						<option value="5">May</option>
-						<option value="6">June</option>
-						<option value="7">July</option>
-						<option value="8">August</option>
-						<option value="9">September</option>
-						<option value="10">October</option>
-						<option value="11">November</option>
-						<option value="12">December</option>
-					</select>
+					<?php
+						// Make the months array
+						$months = array(1 => 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+						
+						// Make the years array
+						$years = range(date('Y'), date('Y')+5);
+						
+						// Make the months pull-down menu
+						echo '<select name="months">';
+						foreach ($months as $monthNum => $monthName) {
+							echo "<option value=\"$monthNum\">$monthName</option>\n";
+						}
+						echo '</select>';
+						
+						// Make the years pull-down menu
+						echo '<select name="years">';
+						foreach ($years as $year) {
+							echo "<option value=\"$year\">$year</option>\n";
+						}
+						echo '</select>';
+					?>
 					<input type="submit" value="Go">
+					
+					
 				</form>
 			</header>
 			
@@ -119,7 +144,7 @@
 					<li>Saturday</li>
 				</ul>
 				
-				<?php echo createWeeks(); ?>
+				<?php echo createCalendar(); ?>
 				
 			</div><!-- end calendar -->
 		</div><!-- end calendar-wrap -->
