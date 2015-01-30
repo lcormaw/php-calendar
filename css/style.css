@@ -1,14 +1,46 @@
 body {
-	font-family: Tahoma;
+	font-family: Verdana, Tahoma, sans-serif;
 }
 
 h1 {
 	text-align: center;
+	color: #2B2B2B;
 }
 
 form {
 	text-align: center;
 	margin-bottom: 20px;
+}
+
+.styled-select {
+   height: 5em;
+   overflow: hidden;
+   border: 1px solid #ccc;
+   }
+
+.select-month select {
+	background-color: #eee;
+	padding: 5px;
+	margin-right: 10px;
+	font-size: 16px;
+	border: 1px solid #999;
+}
+
+.select-month select[name="months"] {
+	width: 8em;
+}
+
+.select-month select[name="years"] {
+	width: 5em;
+}
+
+.select-month .button {
+	border: 1px solid #666;
+	background-color: #999;
+	color: #fff;
+	font-weight: bold;
+	padding: 5px;
+	cursor: pointer;
 }
 
 #calendar {
@@ -45,7 +77,7 @@ form {
 
 #calendar .weekdays {
 	height: 40px;
-	background-color: #333;
+	background-color: #444;
 	width: 99.6%;
 }
 
@@ -60,7 +92,7 @@ form {
 }
 
 #calendar .days li {
-	height: 180px;
+	height: 8em;
 }
 
 #calendar .days li:hover {
@@ -71,12 +103,12 @@ form {
 	text-align: center;
 	margin-bottom: 5px;
 	padding: 5px;
-	background-color: #333;
+	background-color: #666;
 	color: #fff;
 	width: 25px;
-	border-radius: 50%;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
+	border-radius: 5%;
+	-webkit-border-radius: 5%;
+	-moz-border-radius: 5%;
 	float: right;
 }
 
@@ -99,6 +131,11 @@ form {
 	background-color: #e4f2f2;
 	border: 1px solid #b5dbdc;
 	text-decoration: none;
+}
+
+#calendar .event:hover {
+	background-color: #BAEFEF;
+	cursor: pointer;
 }
 
 #calendar .event-desc {
