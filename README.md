@@ -4,3 +4,4 @@ This calendar is dynamically generated with PHP and is tableless. It pulls event
 
 ## To do
 * Create admin section to add/modify/delete events
+* Open a page for each event containing all info related to it
