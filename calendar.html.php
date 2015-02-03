@@ -28,7 +28,7 @@
 					<li>Friday</li>
 					<li>Saturday</li>
 				</ul>
-				<?php echo createCalendar(); ?>
+				<?php echo createCalendar($month, $year); ?>
 			</div><!-- end calendar -->
 		</div><!-- end calendar-wrap -->
 	</body>
