@@ -16,27 +16,99 @@
 		$year = $_GET['years'];
 	}
 	
-	echo $month . ' - ' . $year;
-	
-	
-	
-	/***************************************/
-	// Verify on which weekday to start and end the calendar and how long the month is
-	/***************************************/
-	$firstDay = date('w', mktime(0, 0, 0, $month, 1, $year));
-	
-	if ($month == 12) {
-		$howManyDays = date('j', mktime(0, 0, 0, 1, 0, $year+1));
-	} else {
-		$howManyDays = date('j', mktime(0, 0, 0, $month+1, 0, $year));
-	}
-	
-	$lastDay = date('w', mktime(0, 0, 0, $month, $howManyDays, $year));
 	
 	/***************************************/
 	// Create calendar
 	/***************************************/
-	function createCalendar() {
+	function testCalendar($month, $year) {
+		
+		// Verify on which weekday to start and end the calendar and how long the month is
+		$firstDay = date('w', mktime(0, 0, 0, $month, 1, $year));
+	
+		if ($month == 12) {
+			$howManyDays = date('j', mktime(0, 0, 0, 1, 0, $year+1));
+		} else {
+			$howManyDays = date('j', mktime(0, 0, 0, $month+1, 0, $year));
+		}
+		
+		$lastDay = date('w', mktime(0, 0, 0, $month, $howManyDays, $year));
+		
+		$cnt = 1;
+		$calendar = "<ul class=\"days\">\n";
+		
+		
+		
+		
+		// Create list items for days for the first week
+		
+		if ($firstDay) {
+			for ($i = 1; $i <= $firstDay; $i++) {
+				$calendar .= 	"<li class=\"day other-month\">\n
+									<div class=\"date\">&nbsp;</div>\n
+								</li>\n";
+			}
+			
+			$remainingDays = 7 - $firstDay;
+			
+			for ($i = 1; $i <= $remainingDays; $i++) {
+				$calendar .= 	"<li class=\"day\">\n
+									<div class=\"date\">$cnt</div>\n
+								</li>\n";
+				$cnt++;
+			}
+			
+			$calendar .= "</ul>\n";
+		}
+		
+		// Create list items for the rest of the month
+		while ($cnt <= $howManyDays) {
+			
+			$calendar .= "<ul class=\"days\">\n";
+			
+			for ($i = 0; $i <7; $i++) {
+				$calendar .=	"<li class=\"day\">\n
+									<div class=\"date\">$cnt</div>\n";
+					
+				if (isset($events)) {
+					foreach ($events as $event) {
+							if ($event['dayStart'] == $cnt) {
+								echo ${'display' . $event['id']};
+							}
+					}	
+				}
+					
+				$calendar .= "</li>\n";
+				$cnt++;
+				
+				// Create list items for days from next month
+				if ($cnt == $howManyDays+1 && $lastDay != 6) {
+					for ($i = 0; $i < (6 - $lastDay); $i++) {
+						$calendar .=	"<li class=\"day other-month\">\n
+											<div class=\"date\">&nbsp;</div>\n
+										</li>\n";
+					}
+					break;
+				}
+			}
+			
+			$calendar .= "</ul>\n";
+		}
+		
+		echo $calendar;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	/***************************************/
+	// Create calendar
+	/***************************************/
+/*	function createCalendar() {
 		global $month, $year, $firstDay, $howManyDays, $lastDay;
 		$cnt = 1;
 		
@@ -147,7 +219,7 @@
 			echo "</ul>";
 		}
 	}
-	
+*/	
 	/***************************************/
 	// Create pull-down menus
 	/***************************************/
