@@ -16,6 +16,10 @@
 		$year = $_GET['years'];
 	}
 	
+	echo $month . ' - ' . $year;
+	
+	
+	
 	/***************************************/
 	// Verify on which weekday to start and end the calendar and how long the month is
 	/***************************************/
@@ -152,17 +156,23 @@
 		
 		$years = range(date('Y'), date('Y')+5);
 		
-		echo '<select name="months">';
+		$menu = '<select name="months">';
 		foreach ($months as $monthNum => $monthName) {
-			echo "<option value=\"$monthNum\">$monthName</option>\n";
+			$menu .= "<option value=\"$monthNum\" ";
+						if ($monthNum == date('n')) {
+							$menu .= 'selected';
+						}
+			$menu .= ">$monthName</option>\n";
 		}
-		echo '</select>';
+		$menu .= '</select>';
 		
-		echo '<select name="years">';
+		$menu .= '<select name="years">';
 		foreach ($years as $year) {
-			echo "<option value=\"$year\">$year</option>\n";
+			$menu .= "<option value=\"$year\">$year</option>\n";
 		}
-		echo '</select>';
+		$menu .= '</select>';
+		
+		echo $menu;
 	}
 	
 	include 'calendar.html.php';
